@@ -5,6 +5,7 @@ import pathlib
 import random
 import string
 from typing import Any, Dict, List, Optional, Sequence, Union
+import uuid
 
 from ruamel.yaml.scalarstring import LiteralScalarString
 from .typing import list_to_string, PostAddress
@@ -62,8 +63,7 @@ def pretty_print(table: List[List[str]], justify: str = "L") -> str:
 
 
 def get_random_uid() -> str:
-    return ''.join([random.choice(string.ascii_lowercase + string.digits)
-                    for _ in range(36)])
+    return uuid.uuid4().urn
 
 
 def yaml_clean(value: Union[str, Sequence, Dict[str, Any], None]

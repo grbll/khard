@@ -10,6 +10,7 @@ import operator
 import os
 import sys
 import textwrap
+import uuid
 from typing import cast, Callable, Dict, Iterable, List, Optional, Union
 
 from unidecode import unidecode
@@ -140,7 +141,11 @@ def copy_contact(contact: CarddavObject, target_address_book: VdirAddressBook,
         # create a new uid
         contact.uid = helpers.get_random_uid()
     # set destination file name
-    contact.filename = os.path.join(target_address_book.path,
+    try:
+        contact.filename = os.path.join(target_address_book.path,
+                                        "{}.vcf".format(str(uuid.UUID(contact.uid))))
+    except:
+        contact.filename = os.path.join(target_address_book.path,
                                     "{}.vcf".format(contact.uid))
     # save
     contact.write_to_file()
@@ -169,6 +174,8 @@ def list_contacts(vcard_list: List[CarddavObject], fields: Iterable[str] = (),
             selected_address_books.append(contact.address_book)
         if contact.kind not in selected_kinds:
             selected_kinds.add(contact.kind)
+    # for address_book in selected_address_books:
+    #     address_book.build_short_uids_dict()
     table = []
     # default table header
     table_header = ["index", "name", "phone", "email"]

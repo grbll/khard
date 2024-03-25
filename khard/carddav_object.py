@@ -15,6 +15,7 @@ import os
 import re
 import sys
 import time
+import uuid
 from typing import Any, Callable, Dict, List, Literal, Optional, Tuple, \
     TypeVar, Union, Sequence, overload
 
@@ -1324,11 +1325,11 @@ class CarddavObject(YAMLEditable):
             ) -> "CarddavObject":
         """Create a new CarddavObject from scratch"""
         vcard = vobject.vCard()
-        uid = helpers.get_random_uid()
-        filename = os.path.join(address_book.path, uid + ".vcf")
+        uid = uuid.uuid4()
+        filename = os.path.join(address_book.path, str(uid) + ".vcf")
         card = cls(vcard, address_book, filename, supported_private_objects,
                    version, localize_dates)
-        card.uid = uid
+        card.uid = uid.urn
         return card
 
     @classmethod
